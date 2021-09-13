@@ -1,0 +1,34 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[requires]
+python_version = "3.9"
+
+[packages]
+
+[dev-packages]
+# testing
+pytest = "*"
+pytest-env = "*"
+pytest-mock = "*"
+pytest-cov = "*"
+
+# linting
+flake8 = "*"
+
+# formatting
+black = "==21.8b0"
+
+# sorting
+isort = "*"
+
+# pre-commit hooks
+pre-commit = "*"
+
+[scripts]
+create_env = """bash -c '
+PIPENV_VENV_IN_PROJECT=1 pipenv install -d; \
+pre-commit install
+'"""
