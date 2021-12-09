@@ -7,32 +7,32 @@ name: Code QA & Staging
 jobs:
   python-formatting:
     runs-on: ubuntu-latest
-    container: *PYTHON_CONTAINER
+    container: python:3.9-slim
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
       - name: Check formatting
-      - run: |
+        run: |
           pip install -q black==21.8b0
           black --check src
 
   python-linting:
     runs-on: ubuntu-latest
-    container: *PYTHON_CONTAINER
+    container: python:3.9-slim
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
       - name: Run linter
-      - run: |
+        run: |
           pip install -q flake8
           flake8 src
 
   unit-tests:
     runs-on: ubuntu-latest
     container:
-      image: *PYTHON_CONTAINER
+      image: python:3.9-slim
 
     steps:
       - name: Checkout
@@ -55,7 +55,7 @@ jobs:
       - unit-tests
 
     runs-on: ubuntu-latest
-    container: *PYTHON_CONTAINER
+    container: python:3.9-slim
 
     steps:
       - name: Checkout

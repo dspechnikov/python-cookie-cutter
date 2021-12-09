@@ -1,5 +1,3 @@
-PYTHON_CONTAINER: &PYTHON_CONTAINER 'python:3.9-slim'
-
 on: deployment
 
 name: Production
@@ -9,7 +7,7 @@ jobs:
     if: github.event.deployment.ref == 'main' && github.event.deployment.environment == 'production'
 
     runs-on: ubuntu-latest
-    container: *PYTHON_CONTAINER
+    container: python:3.9-slim
 
     steps:
       - name: Checkout
