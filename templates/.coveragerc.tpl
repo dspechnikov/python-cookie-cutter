@@ -1,7 +1,7 @@
 [run]
 branch = True
 source =
-    ./src/
+    ./$src_dir/
 
 omit =
     */tests/*

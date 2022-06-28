@@ -1,5 +1,5 @@
 default_language_version:
-  python: python3.10
+  python: python$python_version
 
 repos:
   - repo: https://github.com/pycqa/isort

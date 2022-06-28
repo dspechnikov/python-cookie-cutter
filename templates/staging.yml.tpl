@@ -1,5 +1,3 @@
-PYTHON_CONTAINER: &PYTHON_CONTAINER 'python:3.9-slim'
-
 on: push
 
 name: Code QA & Staging
@@ -7,7 +5,7 @@ name: Code QA & Staging
 jobs:
   python-formatting:
     runs-on: ubuntu-latest
-    container: python:3.9-slim
+    container: python:$python_version-slim
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -19,7 +17,7 @@ jobs:
 
   python-linting:
     runs-on: ubuntu-latest
-    container: python:3.9-slim
+    container: python:$python_version-slim
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -32,7 +30,7 @@ jobs:
   unit-tests:
     runs-on: ubuntu-latest
     container:
-      image: python:3.9-slim
+      image: python:$python_version-slim
 
     steps:
       - name: Checkout
@@ -55,7 +53,7 @@ jobs:
       - unit-tests
 
     runs-on: ubuntu-latest
-    container: python:3.9-slim
+    container: python:$python_version-slim
 
     steps:
       - name: Checkout
