@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import os
 import shlex
 import shutil
@@ -76,8 +74,6 @@ def main() -> None:
             out_path=out_path,
         )
 
-    shutil.rmtree(templates_dir)
-
     # install dependencies
     run_cmd(
         "pipenv install -d",
@@ -90,6 +86,10 @@ def main() -> None:
 
     # install pre-commit hooks
     run_cmd("pre-commit install")
+
+    # remove files needed only for setup
+    shutil.rmtree(templates_dir)
+    os.remove(project_dir / "setup.py")
 
 
 if __name__ == "__main__":
