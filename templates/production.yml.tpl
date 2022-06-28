@@ -7,7 +7,7 @@ jobs:
     if: github.event.deployment.ref == 'main' && github.event.deployment.environment == 'production'
 
     runs-on: ubuntu-latest
-    container: python:3.9-slim
+    container: python:$python_version-slim
 
     steps:
       - name: Checkout
