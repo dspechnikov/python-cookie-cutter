@@ -19,7 +19,11 @@ PYTHON_VERSION_TEMPLATES = (
     ("production.yml.tpl", Path(".github/workflows") / "production.yml"),
     ("staging.yml.tpl", Path(".github/workflows") / "staging.yml"),
 )
-SRC_DIR_TEMPLATES = ((".coveragerc.tpl", ".coveragerc"),)
+# fmt: off
+SRC_DIR_TEMPLATES = (
+    ("pyproject.toml.tpl", "pyproject.toml"),
+)
+# fmt: on
 
 
 def render_template(template_path, context: dict, out_path=None):
@@ -41,10 +45,10 @@ def run_cmd(cmd: str, env=None) -> None:
 
 def main() -> None:
     project_name = (
-        input(f"Project name ({DEFAULT_PROJECT_NAME}):") or DEFAULT_PROJECT_NAME
+        input(f"Project name ({DEFAULT_PROJECT_NAME}): ") or DEFAULT_PROJECT_NAME
     )
     python_version = (
-        input(f"Python version ({DEFAULT_PYTHON_VERSION}):") or DEFAULT_PYTHON_VERSION
+        input(f"Python version ({DEFAULT_PYTHON_VERSION}): ") or DEFAULT_PYTHON_VERSION
     )
 
     project_dir = BASE_DIR / project_name
