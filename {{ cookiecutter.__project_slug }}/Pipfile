@@ -4,7 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [requires]
-python_version = "$python_version"
+python_version = "{{ cookiecutter.python_version }}"
 
 [packages]
 
@@ -17,6 +17,6 @@ pytest-cov = "*"
 
 # code quality
 flake8 = "*"
-black = "22.6.0"
+black = "{{ cookiecutter._black_version }}"
 isort = "*"
 pre-commit = "*"

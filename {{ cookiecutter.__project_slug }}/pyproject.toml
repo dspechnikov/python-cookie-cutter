@@ -7,7 +7,7 @@ addopts = "-ra -q --strict-markers"
 [tool.coverage.run]
 branch = true
 source = [
-    "./$src_dir/",
+    "./{{ cookiecutter.__project_slug }}/",
 ]
 omit = [
     "*/tests/*",

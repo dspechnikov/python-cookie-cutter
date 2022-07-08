@@ -3,29 +3,21 @@ on: push
 name: Code QA & Staging
 
 jobs:
-  python-formatting:
+  static-analysis:
     runs-on: ubuntu-latest
-    container: python:$python_version-slim
+    container: python:3.10
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Check formatting
+      - name: Install pre-commit
         run: |
-          pip install -q black==21.8b0
-          black --check src
+          pip install -q pre-commit
+          pre-commit install --install-hooks
 
-  python-linting:
-    runs-on: ubuntu-latest
-    container: python:$python_version-slim
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Run linter
+      - name: Run code QA tools from pre-commit hooks
         run: |
-          pip install -q flake8
-          flake8 src
+          pre-commit run --all-files
 
   unit-tests:
     runs-on: ubuntu-latest
@@ -43,13 +35,12 @@ jobs:
 
       - name: Run unit tests
         run: |
-          pytest -c pytest.ini --cov --cov-report term-missing:skip-covered src/
+          pytest --cov --cov-report term-missing:skip-covered src/
 
   deploy-staging:
     if: github.event.ref == 'refs/heads/main'
     needs:
-      - python-formatting
-      - python-linting
+      - static-analysis
       - unit-tests
 
     runs-on: ubuntu-latest
