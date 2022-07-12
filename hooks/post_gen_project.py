@@ -36,6 +36,8 @@ def main():
         },
     )
 
+    run_cmd("git init")
+
     run_cmd(
         "pipenv run pre-commit install --install-hooks",
         env={
