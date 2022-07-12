@@ -1,7 +1,7 @@
 {
     "project_name": "Python template",
     "__project_slug": "{{ cookiecutter.project_name|lower|replace(' ', '_')|replace('-', '_') }}",
-    "python_version": ["3.10"],
+    "python_version": ["3.10", "3.9", "3.8", "3.7"],
     "ci_platform": [null, "GitHub Actions"],
     "_black_version": "22.6.0",
     "_path_choices": {
