@@ -4,6 +4,7 @@
     "python_version": ["3.10", "3.9", "3.8", "3.7"],
     "ci_platform": [null, "GitHub Actions"],
     "_black_version": "22.6.0",
+    "_mypy_version": "0.971",
     "_path_choices": {
         "ci_platform": {
             "GitHub Actions": ".github"

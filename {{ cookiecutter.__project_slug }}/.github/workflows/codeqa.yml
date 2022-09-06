@@ -1,6 +1,6 @@
 on: push
 
-name: Code QA & Staging
+name: Code QA
 
 jobs:
   static-analysis:
@@ -10,9 +10,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install pre-commit
+      - name: Install required packages
         run: |
-          pip install -q pre-commit
+          pip install -q pre-commit pipenv
           pre-commit install --install-hooks
 
       - name: Run code QA tools from pre-commit hooks
@@ -35,17 +35,4 @@ jobs:
 
       - name: Run unit tests
         run: |
-          pytest --cov --cov-report term-missing:skip-covered src/
-
-  deploy-staging:
-    if: github.event.ref == 'refs/heads/main'
-    needs:
-      - static-analysis
-      - unit-tests
-
-    runs-on: ubuntu-latest
-    container: python:$python_version-slim
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+          pipenv run test_cov
