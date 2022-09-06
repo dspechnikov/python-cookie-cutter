@@ -1,3 +1,10 @@
+[tool.mypy]
+ignore_missing_imports = true
+exclude = [
+    ".*conftest.py",
+    ".*/tests/.*",
+]
+
 [tool.isort]
 profile = "black"
 
@@ -12,3 +19,6 @@ source = [
 omit = [
     "*/tests/*",
 ]
+
+[tool.coverage.report]
+fail_under = 90

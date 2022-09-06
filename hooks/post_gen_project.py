@@ -5,6 +5,8 @@ import shutil
 import subprocess
 import sys
 
+# black would use double quotes, it would give error on json.loads call because
+# cookiecutter json content also has double quotes
 # fmt: off
 COOKIECUTTER_CONTEXT = json.loads('{{ cookiecutter|tojson }}')
 # fmt: on

@@ -19,4 +19,21 @@ pytest-cov = "*"
 flake8 = "*"
 black = "{{ cookiecutter._black_version }}"
 isort = "*"
+mypy = "{{ cookiecutter._mypy_version }}"
 pre-commit = "*"
+
+[scripts]
+# set up the project
+setup = """bash -c '
+    pipenv install -d && \
+    pre-commit install --install-hooks
+'"""
+
+# run tests
+test = "pytest"
+
+# run tests with coverage
+test_cov = "pytest --cov --cov-report term-missing:skip-covered"
+
+# check code quality
+codeqa = "pre-commit run --all-files"
