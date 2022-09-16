@@ -10,8 +10,9 @@ def run_cmd(cmd: str, env=None) -> None:
 
 
 def main() -> None:
-    run_cmd("pip install -q pipenv cookiecutter")
+    run_cmd("python3 -m pip install -q pipenv cookiecutter")
     run_cmd(f"cookiecutter {TEMPLATE_REPO_URL}")
+    run_cmd("python3 -m pip uninstall -y -q cookiecutter")
 
 
 if __name__ == "__main__":
