@@ -7,7 +7,9 @@ import sys
 from pathlib import Path
 from typing import Optional
 
+from cookiecutter.config import get_user_config
 from cookiecutter.generate import generate_files
+from cookiecutter.repository import is_repo_url
 
 # black would use double quotes, it would give error on json.loads call because
 # cookiecutter.json content also has double quotes
@@ -34,10 +36,22 @@ def render_features():
         - feature directory name must be snake_case version of the user-chosen value
     """
 
-    features_path = Path(COOKIECUTTER_CONTEXT["_template"]) / "features"
+    # no features listed, nothing to render
+    if "_features" not in COOKIECUTTER_CONTEXT:
+        return
+
+    if is_repo_url(COOKIECUTTER_CONTEXT["_template"]):
+        cookiecutter_config = get_user_config(default_config=True)
+        template_name = COOKIECUTTER_CONTEXT["_template"].split("/")[-1]
+        cookiecutter_template_path = (
+            Path(cookiecutter_config["cookiecutters_dir"]) / template_name
+        )
+    else:
+        cookiecutter_template_path = Path(COOKIECUTTER_CONTEXT["_template"])
+
+    features_path = cookiecutter_template_path / "features"
     feature_dirs = os.listdir(features_path)
 
-    feature_paths_to_render = []
     for feature_name in COOKIECUTTER_CONTEXT["_features"]:
         if feature_name not in COOKIECUTTER_CONTEXT:
             raise KeyError(
@@ -58,11 +72,8 @@ def render_features():
                 f"{feature_value} directory must be present in {features_path=}"
             )
 
-        feature_paths_to_render.append(features_path / feature_value)
-
-    for feature_path in feature_paths_to_render:
         generate_files(
-            repo_dir=feature_path,
+            repo_dir=features_path / feature_value,
             context={"cookiecutter": COOKIECUTTER_CONTEXT},
             output_dir=COOKIECUTTER_CONTEXT["_output_dir"],
             accept_hooks=False,

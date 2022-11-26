@@ -26,6 +26,7 @@ def render_project_dir(request):
                 cookiecutter(
                     template=str(current_dir.parent),
                     no_input=True,
+                    default_config=True,
                     overwrite_if_exists=True,
                     accept_hooks=use_hooks,
                     output_dir=current_dir,

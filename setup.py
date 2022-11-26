@@ -15,7 +15,10 @@ def run_command(cmd: str, env: Optional[dict] = None):
 
 def main():
     run_command("python3 -m pip install -q pipenv cookiecutter~=2.1")
-    run_command(f"cookiecutter {TEMPLATE_REPO_URL}")
+    # force default config to prevent user config from breaking
+    # features rendering in post-generate hook
+    run_command(f"cookiecutter --default-config {TEMPLATE_REPO_URL}")
+
     run_command("python3 -m pip uninstall -y -q cookiecutter")
 
 
