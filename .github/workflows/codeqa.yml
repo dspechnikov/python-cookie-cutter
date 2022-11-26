@@ -12,17 +12,16 @@ jobs:
 
       - name: Install pre-commit
         run: |
-          pip install -q pre-commit
+          pip install -q pre-commit pipenv
           pre-commit install --install-hooks
 
       - name: Run code QA tools from pre-commit hooks
         run: |
-          pre-commit run --all-files
+          pipenv run codeqa
 
   tests:
     runs-on: ubuntu-latest
-    container:
-      image: python:3.10
+    container: python:3.10
 
     steps:
       - name: Checkout
@@ -35,4 +34,4 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest
+          pipenv run test

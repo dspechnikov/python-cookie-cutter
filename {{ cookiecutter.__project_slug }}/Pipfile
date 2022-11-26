@@ -7,6 +7,10 @@ verify_ssl = true
 python_version = "{{ cookiecutter.python_version }}"
 
 [packages]
+{%- if cookiecutter.web_framework == 'FastAPI' %}
+fastapi = "0.87.0"
+pydantic = "~=1.10"
+{%- endif %}
 
 [dev-packages]
 # testing
@@ -14,6 +18,9 @@ pytest = "*"
 pytest-env = "*"
 pytest-mock = "*"
 pytest-cov = "*"
+{%- if cookiecutter.web_framework == 'FastAPI' %}
+httpx = "*"  # for FastAPI TestClient
+{%- endif %}
 
 # code quality
 flake8 = "*"
@@ -33,7 +40,7 @@ setup = """bash -c '
 test = "pytest"
 
 # run tests with coverage
-test_cov = "pytest --cov --cov-report term-missing:skip-covered"
+test_cov = "pytest --cov"
 
 # check code quality
 codeqa = "pre-commit run --all-files"

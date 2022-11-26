@@ -5,7 +5,7 @@ name: Code QA
 jobs:
   static-analysis:
     runs-on: ubuntu-latest
-    container: python:3.10
+    container: python:{{ cookiecutter.python_version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -21,8 +21,7 @@ jobs:
 
   unit-tests:
     runs-on: ubuntu-latest
-    container:
-      image: python:$python_version-slim
+    container: python:{{ cookiecutter.python_version }}
 
     steps:
       - name: Checkout
