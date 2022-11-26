@@ -1,4 +1,4 @@
-# Python cookie cutter
+# Python cookiecutter
 
 A Python project skeleton
 

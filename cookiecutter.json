@@ -1,13 +1,13 @@
 {
     "project_name": "Python template",
     "__project_slug": "{{ cookiecutter.project_name|lower|replace(' ', '_')|replace('-', '_') }}",
-    "python_version": ["3.10", "3.9", "3.8", "3.7"],
+    "python_version": ["3.11", "3.10", "3.9", "3.8"],
     "ci_platform": [null, "GitHub Actions"],
-    "_black_version": "22.6.0",
-    "_mypy_version": "0.971",
-    "_path_choices": {
-        "ci_platform": {
-            "GitHub Actions": ".github"
-        }
-    }
+    "web_framework": [null, "FastAPI"],
+    "_black_version": "22.10.0",
+    "_mypy_version": "0.991",
+    "_features": [
+        "ci_platform",
+        "web_framework"
+    ]
 }

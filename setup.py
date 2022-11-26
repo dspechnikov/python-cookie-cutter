@@ -1,18 +1,22 @@
 import shlex
 import subprocess
 import sys
+from typing import Optional
 
 TEMPLATE_REPO_URL = "https://github.com/dspechnikov/python-cookie-cutter"
 
 
-def run_cmd(cmd: str, env=None) -> None:
+def run_command(cmd: str, env: Optional[dict] = None):
+    """
+    Run a shell command.
+    """
     subprocess.run(shlex.split(cmd), env=env, check=True)
 
 
-def main() -> None:
-    run_cmd("python3 -m pip install -q pipenv cookiecutter")
-    run_cmd(f"cookiecutter {TEMPLATE_REPO_URL}")
-    run_cmd("python3 -m pip uninstall -y -q cookiecutter")
+def main():
+    run_command("python3 -m pip install -q pipenv cookiecutter~=2.1")
+    run_command(f"cookiecutter {TEMPLATE_REPO_URL}")
+    run_command("python3 -m pip uninstall -y -q cookiecutter")
 
 
 if __name__ == "__main__":

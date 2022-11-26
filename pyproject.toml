@@ -2,7 +2,7 @@
 ignore_missing_imports = true
 exclude = [
     ".*conftest.py",
-    ".*tests/.*",
+    ".*/tests/.*",
 ]
 
 [tool.isort]
@@ -13,19 +13,7 @@ addopts = [
     "-ra",  # show summary for all except passed tests
     "-q",  # quiet
     "--strict-markers",  # require custom markers to be listed in config
-    # skip fully covered files in coverage report
-    "--cov-report=term-missing:skip-covered",
 ]
-
-[tool.coverage.run]
-branch = true
-source = [
-    "./{{ cookiecutter.__project_slug }}/",
+testpaths = [
+    "tests"
 ]
-omit = [
-    "./*conftest.py",
-    "./*tests/*",
-]
-
-[tool.coverage.report]
-fail_under = 0
