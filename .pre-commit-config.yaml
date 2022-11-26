@@ -13,18 +13,18 @@ repos:
     hooks:
       - id: black
         # exclude templated files and directories which cannot be parsed
-        exclude: ".*features/"
+        exclude: "{{ cookiecutter.__project_slug }}/_features/"
 
   - repo: https://github.com/pycqa/flake8
     rev: 3.9.2
     hooks:
       - id: flake8
         # exclude templated files and directories which cannot be parsed
-        exclude: ".*features/"
+        exclude: "{{ cookiecutter.__project_slug }}/_features/"
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v0.991
     hooks:
       - id: mypy
         # exclude templated files and directories which cannot be parsed
-        exclude: ".*features/|.*{{ cookiecutter.__project_slug }}/"
+        exclude: "{{ cookiecutter.__project_slug }}/"
