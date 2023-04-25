@@ -2,7 +2,7 @@
     "project_name": "Python template",
     "__project_slug": "{{ cookiecutter.project_name|lower|replace(' ', '_')|replace('-', '_') }}",
     "python_version": ["3.11", "3.10", "3.9", "3.8"],
-    "ci_platform": [null, "GitHub Actions"],
+    "ci_platform": [null, "GitHub Actions", "GitLab CI"],
     "web_framework": [null, "FastAPI"],
     "_black_version": "22.10.0",
     "_mypy_version": "0.991",

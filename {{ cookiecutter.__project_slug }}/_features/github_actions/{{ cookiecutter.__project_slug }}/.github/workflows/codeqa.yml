@@ -15,9 +15,9 @@ jobs:
           pip install -q pre-commit pipenv
           pre-commit install --install-hooks
 
-      - name: Run code QA tools from pre-commit hooks
+      - name: Run code QA checks
         run: |
-          pre-commit run --all-files
+          pipenv run codeqa
 
   unit-tests:
     runs-on: ubuntu-latest
