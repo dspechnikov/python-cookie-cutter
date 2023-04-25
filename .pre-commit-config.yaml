@@ -28,3 +28,9 @@ repos:
       - id: mypy
         # exclude templated files and directories which cannot be parsed
         exclude: "{{ cookiecutter.__project_slug }}/"
+
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.22.0
+    hooks:
+      - id: check-github-actions
+      - id: check-gitlab-ci

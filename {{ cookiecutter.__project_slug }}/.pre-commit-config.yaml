@@ -21,3 +21,13 @@ repos:
     rev: v{{ cookiecutter._mypy_version }}
     hooks:
       - id: mypy
+{% if cookiecutter.ci_platform %}
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.22.0
+    hooks:
+      {%- if cookiecutter.ci_platform == 'GitHub Actions' %}
+      - id: check-github-actions
+      {%- elif cookiecutter.ci_platform == 'GitLab CI' %}
+      - id: check-gitlab-ci
+      {%- endif %}
+{%- endif %}

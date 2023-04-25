@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import pytest
 from cookiecutter.utils import work_in
@@ -7,18 +8,27 @@ from tests.conftest import run_command
 
 
 @pytest.mark.parametrize(
-    "render_project_dir",
+    "render_project_dir, expected_dir",
     [
-        {
-            "context": {"ci_platform": "GitHub Actions"},
-        }
+        (
+            {
+                "context": {"ci_platform": "GitHub Actions"},
+            },
+            Path(".github/workflows"),
+        ),
+        (
+            {
+                "context": {"ci_platform": "GitLab CI"},
+            },
+            ".gitlab-ci.yml",
+        ),
     ],
-    indirect=True,
+    indirect=["render_project_dir"],
 )
 @pytest.mark.usefixtures("render_project_dir")
 class TestGitHubActionsFeature:
-    def test_workflows_directory(self, render_project_dir):
-        assert (render_project_dir / ".github" / "workflows").exists()
+    def test_workflows_directory(self, render_project_dir, expected_dir):
+        assert (render_project_dir / expected_dir).exists()
 
 
 @pytest.mark.parametrize(

@@ -1,0 +1,25 @@
+stages:
+  - code_qa
+  - test
+
+code_qa:
+  stage: code_qa
+  image: python:{{ cookiecutter.python_version }}
+  script:
+    # install required packages
+    - pip install -q pre-commit pipenv
+    # install hook environments
+    - pre-commit install --install-hooks
+    # run code QA tools
+    - pipenv run codeqa
+
+unit-tests:
+  stage: code_qa
+  image: python:{{ cookiecutter.python_version }}
+  script:
+    # install required packages
+    - pip install -q pipenv
+    # install project dependencies
+    - pipenv install -d --system --deploy
+    # run tests
+    - pipenv run test_cov
