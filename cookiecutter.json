@@ -4,8 +4,8 @@
     "python_version": ["3.11", "3.10", "3.9", "3.8"],
     "ci_platform": [null, "GitHub Actions", "GitLab CI"],
     "web_framework": [null, "FastAPI"],
-    "_black_version": "22.10.0",
-    "_mypy_version": "0.991",
+    "_black_version": "23.3.0",
+    "_mypy_version": "1.2.0",
     "_features": [
         "ci_platform",
         "web_framework"
