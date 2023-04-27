@@ -8,8 +8,8 @@ python_version = "{{ cookiecutter.python_version }}"
 
 [packages]
 {%- if cookiecutter.web_framework == 'FastAPI' %}
-fastapi = "0.87.0"
-pydantic = "~=1.10"
+fastapi = "0.95.1"
+pydantic = "1.10.7"
 {%- endif %}
 
 [dev-packages]

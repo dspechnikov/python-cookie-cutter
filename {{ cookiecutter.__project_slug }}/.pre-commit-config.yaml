@@ -2,13 +2,18 @@ default_language_version:
   python: python{{ cookiecutter.python_version }}
 
 repos:
+
+# ----- Python
+
   - repo: https://github.com/pycqa/isort
     rev: 5.12.0
     hooks:
       - id: isort
 
   - repo: https://github.com/psf/black
-    rev: {{ cookiecutter._black_version }}
+    # The `refs/tags/<tag>:refs/tags/<tag>` is needed for black's
+    # required-version to work. See https://github.com/psf/black/issues/2493
+    rev: 'refs/tags/{{ cookiecutter._black_version }}:refs/tags/{{ cookiecutter._black_version }}'
     hooks:
       - id: black
 
@@ -21,13 +26,76 @@ repos:
     rev: v{{ cookiecutter._mypy_version }}
     hooks:
       - id: mypy
+        # disable built-in hook arguments, all options are defined in pyproject.toml
+        args: []
+
+        # without this option, pre-commit passes every file as command line argument.
+        # this breaks mypy exclude configuration, because mypy ignores it for files
+        # passed this way.
+        # this option disables advantages of pre-commit file discovery and slows down
+        # the hook but is still better than copying exclude configuration here.
+        # see discussion of the same issue in black formatter for additional context:
+        # https://github.com/psf/black/issues/438
+        pass_filenames: false
+{% if cookiecutter.web_framework == 'FastAPI' %}
+        # pre-commit runs mypy from an isolated virtualenv, so we need to add
+        # typed dependencies and packages with mypy plugins separately
+        additional_dependencies:
+          - "fastapi==0.95.1"
+          - "pydantic==1.10.7"
+{%- endif %}
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: name-tests-test
+
+# ----- Non-Python syntax checks
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      - id: check-json
+      - id: check-toml
+      - id: check-yaml
+      - id: check-xml
 {% if cookiecutter.ci_platform %}
   - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.22.0
     hooks:
       {%- if cookiecutter.ci_platform == 'GitHub Actions' %}
-      - id: check-github-actions
+      - id: check-github-workflows
       {%- elif cookiecutter.ci_platform == 'GitLab CI' %}
       - id: check-gitlab-ci
       {%- endif %}
 {%- endif %}
+
+# ----- Secrets detection
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: detect-private-key
+
+# ----- Formatting
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+      - id: pretty-format-json
+        args:
+          - "--autofix"
+
+# ----- Project structure
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-symlinks
+      - id: forbid-submodules
+      - id: check-added-large-files
