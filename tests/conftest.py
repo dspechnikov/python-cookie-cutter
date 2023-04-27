@@ -16,7 +16,7 @@ def render_project_dir(request):
     context = params.get("context", {})
     # pin test project version to python version of the root project, so it
     # could be generated on CI
-    context.update({"python_version": "3.10"})
+    context.update({"python_version": "3.11"})
 
     current_dir = Path(__file__).parent
     result_dir = None

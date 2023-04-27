@@ -1,9 +1,27 @@
+[tool.black]
+target-version = ["py{{ cookiecutter.python_version | replace('.', '') }}"]
+required-version = "{{ cookiecutter._black_version }}"
+quiet = true
+
 [tool.mypy]
+strict = true
+
+# need to check type hints in the project code only,
+# so suppress warnings about missing annotations in 3rd party code
 ignore_missing_imports = true
+
+files = [
+    "./{{ cookiecutter.__project_slug }}/",
+]
 exclude = [
     ".*conftest.py",
-    ".*tests/.*",
+    ".*/tests/.*",
 ]
+{% if cookiecutter.web_framework == 'FastAPI' %}
+plugins = [
+    "pydantic.mypy",
+]
+{%- endif %}
 
 [tool.isort]
 profile = "black"
