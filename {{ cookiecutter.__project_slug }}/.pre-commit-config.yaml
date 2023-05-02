@@ -1,3 +1,12 @@
+# add commit-msg hook type for commit message checks
+default_install_hook_types:
+  - pre-commit
+  - commit-msg
+
+# majority of hooks run only at pre-commit stage
+default_stages:
+  - pre-commit
+
 default_language_version:
   python: python{{ cookiecutter.python_version }}
 
@@ -49,6 +58,12 @@ repos:
     rev: v4.4.0
     hooks:
       - id: name-tests-test
+      - id: debug-statements
+
+  - repo: https://github.com/d-ryzhykau/pipenv-lock-pre-commit
+    rev: 0.5.0
+    hooks:
+      - id: pipenv-verify
 
 # ----- Non-Python syntax checks
 
@@ -72,6 +87,32 @@ repos:
       {%- endif %}
 {%- endif %}
 
+  - repo: https://github.com/streetsidesoftware/cspell-cli
+    rev: v6.31.0
+    hooks:
+      - id: cspell
+        args:
+          - "--no-summary"
+          - "--no-progress"
+          - "--show-context"
+          - "--cache"
+        # the hook runs noticeably faster with single process
+        require_serial: true
+
+      # A hook to spellcheck file paths, because cspell doesn't have such option.
+      # A separate hook run allows to make the check explicit in the output.
+      # Therefore, it is preferable to reuse of the hook above, even at the cost
+      # of running cspell twice.
+      - id: cspell
+        name: cspell-file-paths
+        # use pipfile wrapper script because pre-commit always passes file list as the
+        # last part of the command
+        entry: pipenv run spellcheck-file-paths
+        # disable built-in arguments, wrapper script expects file names only
+        args: []
+        # the hook runs noticeably faster with single process
+        require_serial: true
+
 # ----- Secrets detection
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -90,6 +131,7 @@ repos:
       - id: pretty-format-json
         args:
           - "--autofix"
+          - "--no-ensure-ascii"
 
 # ----- Project structure
 

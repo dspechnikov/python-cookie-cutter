@@ -44,3 +44,13 @@ test_cov = "pytest --cov"
 
 # check code quality
 codeqa = "pre-commit run --all-files"
+
+# A wrapper script to spellcheck file names with cspell for use with
+# pre-commit framework.
+#
+# Created to workaround the following limitations:
+# - cspell does not have an option to check file names
+# - pre-commit passes file list as the last part of the command
+spellcheck-file-paths = """bash -c '
+    echo "$@" | cspell-cli stdin --cache --show-context --no-summary --no-progress --no-must-find-files
+'"""
