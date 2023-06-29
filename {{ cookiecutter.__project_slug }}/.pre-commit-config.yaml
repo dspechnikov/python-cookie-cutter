@@ -15,7 +15,7 @@ repos:
 # ----- Python
 
   - repo: https://github.com/pycqa/isort
-    rev: 5.12.0
+    rev: {{ cookiecutter._isort_version }}
     hooks:
       - id: isort
 
@@ -27,16 +27,25 @@ repos:
       - id: black
 
   - repo: https://github.com/pycqa/flake8
-    rev: 6.0.0
+    rev: {{ cookiecutter._flake8_version }}
     hooks:
       - id: flake8
 
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v{{ cookiecutter._mypy_version }}
+  # use local system hook instead of pre-commit mirror (uses isolated virtualenv)
+  # to avoid copying typed dependencies to additional_dependencies
+  - repo: local
     hooks:
       - id: mypy
-        # disable built-in hook arguments, all options are defined in pyproject.toml
-        args: []
+        name: mypy
+        description: 'Python type checker'
+        'types_or':
+          - python
+          - pyi
+        language: system
+        entry: mypy
+
+        # the hook runs noticeably faster with single process
+        require_serial: true
 
         # without this option, pre-commit passes every file as command line argument.
         # this breaks mypy exclude configuration, because mypy ignores it for files
@@ -46,13 +55,6 @@ repos:
         # see discussion of the same issue in black formatter for additional context:
         # https://github.com/psf/black/issues/438
         pass_filenames: false
-{% if cookiecutter.web_framework == 'FastAPI' %}
-        # pre-commit runs mypy from an isolated virtualenv, so we need to add
-        # typed dependencies and packages with mypy plugins separately
-        additional_dependencies:
-          - "fastapi==0.95.1"
-          - "pydantic==1.10.7"
-{%- endif %}
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
@@ -64,6 +66,29 @@ repos:
     rev: 0.5.0
     hooks:
       - id: pipenv-verify
+
+{% if cookiecutter.orm == 'SQLAlchemy' %}
+# ----- Database
+
+  - repo: https://github.com/sbdchd/squawk
+    rev: v0.24.0
+    hooks:
+      - id: squawk
+        entry: pipenv run lint-migrations
+        pass_filenames: false
+        files: {{cookiecutter.__project_slug}}/database/migrations/versions
+
+  - repo: local
+    hooks:
+      - id: alembic-check
+        name: alembic-check
+        description: 'Check missing Alembic migrations'
+        entry: pipenv run check-missing-migrations
+        pass_filenames: false
+        types:
+          - python
+        language: python
+{%- endif %}
 
 # ----- Non-Python syntax checks
 

@@ -7,6 +7,8 @@ repos:
     rev: 5.12.0
     hooks:
       - id: isort
+        # exclude templated files and directories which cannot be parsed
+        exclude: "{{ cookiecutter.__project_slug }}/_features/"
 
   - repo: https://github.com/psf/black
     rev: 23.3.0
