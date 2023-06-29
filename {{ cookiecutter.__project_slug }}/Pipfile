@@ -8,26 +8,36 @@ python_version = "{{ cookiecutter.python_version }}"
 
 [packages]
 {%- if cookiecutter.web_framework == 'FastAPI' %}
-fastapi = "0.95.1"
-pydantic = "1.10.7"
+fastapi = "==0.95.1"
+pydantic = "==1.10.7"
+{%- endif %}
+{% if cookiecutter.orm == 'SQLAlchemy' %}
+# ORM
+sqlalchemy = {version = "==2.0.13", extras = ["postgresql_psycopg"]}
 {%- endif %}
 
 [dev-packages]
+{%- if cookiecutter.orm == 'SQLAlchemy' %}
+# DB migrations
+alembic = "==1.11.0"
+python-dotenv = "==1.0.0"  # for .env file support in Alembic env.py script
+{%- endif %}
+
 # testing
-pytest = "*"
-pytest-env = "*"
-pytest-mock = "*"
-pytest-cov = "*"
+pytest = "==7.4.0"
+pytest-env = "==0.8.2"
+pytest-mock = "==3.11.1"
+pytest-cov = "==4.1.0"
 {%- if cookiecutter.web_framework == 'FastAPI' %}
 httpx = "*"  # for FastAPI TestClient
 {%- endif %}
 
 # code quality
-flake8 = "*"
-black = "{{ cookiecutter._black_version }}"
-isort = "*"
-mypy = "{{ cookiecutter._mypy_version }}"
-pre-commit = "*"
+flake8 = "=={{ cookiecutter._flake8_version }}"
+black = "=={{ cookiecutter._black_version }}"
+isort = "=={{ cookiecutter._isort_version }}"
+mypy = "=={{ cookiecutter._mypy_version }}"
+pre-commit = "==3.3.3"
 
 [scripts]
 # set up the project
@@ -44,6 +54,37 @@ test_cov = "pytest --cov"
 
 # check code quality
 codeqa = "pre-commit run --all-files"
+{% if cookiecutter.orm == 'SQLAlchemy' %}
+# Generate db migrations with Alembic. Alembic requires an up-to-date database for
+# auto-generation to work.
+make-db-migrations = """bash -c '
+    alembic upgrade head || exit $?;
+    alembic check || alembic revision --autogenerate -m "$0";
+
+    alembic downgrade base
+'"""
+mm = "pipenv run make-db-migrations"  # short alias
+
+# Apply db migrations with Alembic
+migrate-db = "alembic upgrade head"
+mi = "pipenv run migrate-db"  # short alias
+
+# A script to check whether Alembic migrations match SQLAlchemy models in the project.
+# Alembic requires an up-to-date database for that.
+check-missing-migrations = """bash -c '
+    alembic upgrade head || exit $?;
+    alembic check;
+    check_status=$?;
+
+    alembic downgrade base;
+    exit $check_status
+'"""
+
+# run DB migrations sanity checks
+lint-migrations = """bash -c '
+    alembic upgrade head --sql | squawk
+'"""
+{%- endif %}
 
 # A wrapper script to spellcheck file names with cspell for use with
 # pre-commit framework.
