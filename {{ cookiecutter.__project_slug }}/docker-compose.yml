@@ -1,0 +1,46 @@
+# docker compose configuration for:
+# - local development
+#   intended use is to start external services like databases. they are exposed to the
+#   host, so the development could be done without docker build overhead.
+# - CI jobs
+#   the application container contains all necessary dependencies to run CI checks.
+#   running docker compose run app <command> should be enough.
+
+services:
+  app:
+    image: "{{ cookiecutter.__project_slug }}"
+    build:
+      dockerfile: "docker/{{ cookiecutter.__project_slug }}/Dockerfile"
+    entrypoint: "docker/{{ cookiecutter.__project_slug }}/entrypoint.sh"
+{%- if cookiecutter.database == 'Postgres' %}
+    environment:
+      {{ cookiecutter.__project_slug | upper }}_DATABASE_HOST: db
+      # compose cannot interpolate variables from this environment section,
+      # so set db host explicitly in database URL
+      {{ cookiecutter.__project_slug | upper }}_DATABASE_URL: "postgresql+psycopg://${% raw %}{{% endraw %}{{ cookiecutter.__project_slug | upper }}_DATABASE_USER}:${% raw %}{{% endraw %}{{ cookiecutter.__project_slug | upper }}_DATABASE_PASSWORD}@db:${% raw %}{{% endraw %}{{ cookiecutter.__project_slug | upper }}_DATABASE_PORT:-5432}/${% raw %}{{% endraw %}{{ cookiecutter.__project_slug | upper }}_DATABASE_NAME}"
+{%- endif %}
+    env_file:
+      - ".env"
+{%- if cookiecutter.database == 'Postgres' %}
+    depends_on:
+      # use default condition, because "docker compose run" fails with service_healthy
+      # condition. error is "dependency failed to start"
+      - db
+{%- endif %}
+{% if cookiecutter.database == 'Postgres' %}
+  db:
+    image: "postgres:15.2"
+    environment:
+      POSTGRES_USER: ${% raw %}{{% endraw %}{{ cookiecutter.__project_slug | upper }}_DATABASE_USER}
+      POSTGRES_PASSWORD: ${% raw %}{{% endraw %}{{ cookiecutter.__project_slug | upper }}_DATABASE_PASSWORD}
+      POSTGRES_DB: ${% raw %}{{% endraw %}{{ cookiecutter.__project_slug | upper }}_DATABASE_NAME}
+      POSTGRES_PORT: ${% raw %}{{% endraw %}{{ cookiecutter.__project_slug | upper }}_DATABASE_PORT:-5432}
+    ports:
+      - "${% raw %}{{% endraw %}{{ cookiecutter.__project_slug | upper }}_DATABASE_PORT:-5432}:${% raw %}{{% endraw %}{{ cookiecutter.__project_slug | upper }}_DATABASE_PORT:-5432}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 3s
+      start_period: 5s
+      retries: 3
+{%- endif %}

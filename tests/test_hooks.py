@@ -11,7 +11,6 @@ class TestPostGenProject:
     def test_structure(self, render_project_dir):
         assert render_project_dir.exists()
         assert (render_project_dir / "Pipfile").exists()
-        assert (render_project_dir / ".git" / "hooks" / "pre-commit").exists()
 
     def test_virtualenv_created(self, render_project_dir):
         with work_in(render_project_dir):

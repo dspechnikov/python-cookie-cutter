@@ -73,15 +73,15 @@ def main():
     render_features()
 
     run_command("git init")
-
     run_command(
-        "pipenv run setup",
+        "pipenv install -d",
         env={
             **os.environ,
             "PIPENV_VENV_IN_PROJECT": "1",
             "PIPENV_IGNORE_VIRTUALENVS": "1",
         },
     )
+    run_command("cp .env.template .env")
 
 
 if __name__ == "__main__":
