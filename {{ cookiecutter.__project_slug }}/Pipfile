@@ -43,8 +43,36 @@ pre-commit = "==3.3.3"
 # set up the project
 setup = """bash -c '
     pipenv install -d && \
-    pre-commit install --install-hooks
+    pipenv run pre-commit install --install-hooks && \
+    cp .env.template .env {%- if cookiecutter.database == 'Postgres' %}&& \
+    docker compose build app && \
+    pipenv run start-db
+    {%- endif %}
 '"""
+
+{% if cookiecutter.orm == 'SQLAlchemy' and cookiecutter.web_framework == 'FastAPI' %}
+# run development environment locally
+run-dev = """bash -c '
+    alembic upgrade head || exit $?;
+
+    uvicorn --reload {{ cookiecutter.__project_slug }}.app:app;
+
+    alembic downgrade base
+'"""
+{%- endif %}
+
+{%- if cookiecutter.database == 'Postgres' %}
+# start db server
+start-db = """bash -c '
+    docker compose up db -d || exit $?;
+    while ! docker compose exec -T db "pg_isready";
+      do sleep 0.2;
+    done;
+'"""
+
+# stop db server and remove containers
+rm-db = "docker compose rm -s -f db"
+{%- endif %}
 
 # run tests
 test = "pytest"

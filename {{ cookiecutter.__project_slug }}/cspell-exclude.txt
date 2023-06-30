@@ -27,7 +27,6 @@ repr
 sessionmaker
 sqlalchemy
 starlette
-tinyurl
 tomli
 usefixtures
 uvicorn

@@ -5,33 +5,31 @@ name: Code QA
 jobs:
   static-analysis:
     runs-on: ubuntu-latest
-    container: python:{{ cookiecutter.python_version }}
+    container: docker:24.0.2-git
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install required packages
-        run: |
-          pip install -q pre-commit pipenv
-          pre-commit install --install-hooks
+      - name: Fill environment variables
+        run: cp .env.template .env
 
-      - name: Run code QA checks
-        run: |
-          pipenv run codeqa
+      - name: Run code QA tools
+        run: docker compose run --build app pipenv run pre-commit run --all-files
 
   unit-tests:
     runs-on: ubuntu-latest
-    container: python:{{ cookiecutter.python_version }}
+    image: docker:24.0.2-git
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install required packages
-        run: |
-          pip install -q pipenv
-          pipenv install -d --system --deploy
+      # this fixes git permissions issue, see https://github.com/actions/checkout/issues/1048
+      - name: Resolve permissions issue for repo directory
+        run: "git config --system --add safe.directory ${GITHUB_WORKSPACE}"
 
-      - name: Run unit tests
-        run: |
-          pipenv run test_cov
+      - name: Fill environment variables
+        run: cp .env.template .env
+
+      - name: Run tests
+        run: docker compose run --build app pipenv run test_cov

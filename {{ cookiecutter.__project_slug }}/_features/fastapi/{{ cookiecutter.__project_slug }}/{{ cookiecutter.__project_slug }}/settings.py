@@ -8,6 +8,7 @@ class Settings(BaseSettings):
 
     class Config:
         env_file = ".env"
+        env_prefix = "{{ cookiecutter.__project_slug | upper }}_"
 
 
 settings = Settings()
