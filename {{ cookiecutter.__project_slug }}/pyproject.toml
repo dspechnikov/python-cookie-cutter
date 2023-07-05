@@ -47,3 +47,45 @@ omit = [
 
 [tool.coverage.report]
 fail_under = 0
+
+[tool.commitizen]
+name = "cz_customize"
+
+[tool.commitizen.customize]
+message_template = {% raw %}"""
+{{title}}
+{%- if description %}
+
+{{ description }}
+{%- endif %}
+"""
+{%- endraw %}
+example = """
+add the shiny new feature
+
+this feature increases shininess of the project
+"""
+schema = """
+<title>
+
+[optional description]
+"""
+schema_pattern = "^(.+)(\\n\\n.+)?$"
+info = """
+Commit message rules:
+- commit message must not be empty
+- if description is provided, it must be separated from title with a single blank line
+
+Run "cz schema" to view commit message template.
+"""
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "title"
+message = "Commit title: "
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "description"
+message = "Commit description: "
+default = ""
