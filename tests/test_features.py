@@ -49,7 +49,8 @@ class TestDirectories:
         indirect=["render_project_dir"],
     )
     def test_code_directory(self, render_project_dir, expected_dir):
-        """Test code directories exist. It's a separate test because code directory
+        """
+        Test code directories exist. It's a separate test because code directory
         name is dynamic and cannot be accessed inside test parameters.
         """
         assert (render_project_dir / render_project_dir.name / expected_dir).exists()
@@ -60,7 +61,7 @@ class TestDirectories:
     [
         {
             "context": {"web_framework": "FastAPI"},
-        }
+        },
     ],
     indirect=True,
 )

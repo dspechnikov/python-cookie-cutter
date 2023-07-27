@@ -14,10 +14,13 @@ repos:
 
 # ----- Python
 
-  - repo: https://github.com/pycqa/isort
-    rev: {{ cookiecutter._isort_version }}
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.0.280
     hooks:
-      - id: isort
+      - id: ruff
+        args:
+          - "--fix"
+          - "--exit-non-zero-on-fix"
 
   - repo: https://github.com/psf/black
     # The `refs/tags/<tag>:refs/tags/<tag>` is needed for black's
@@ -25,11 +28,6 @@ repos:
     rev: 'refs/tags/{{ cookiecutter._black_version }}:refs/tags/{{ cookiecutter._black_version }}'
     hooks:
       - id: black
-
-  - repo: https://github.com/pycqa/flake8
-    rev: {{ cookiecutter._flake8_version }}
-    hooks:
-      - id: flake8
 
   # use local system hook instead of pre-commit mirror (uses isolated virtualenv)
   # to avoid copying typed dependencies to additional_dependencies
@@ -60,7 +58,6 @@ repos:
     rev: v4.4.0
     hooks:
       - id: name-tests-test
-      - id: debug-statements
 
   - repo: https://github.com/d-ryzhykau/pipenv-lock-pre-commit
     rev: 0.5.0

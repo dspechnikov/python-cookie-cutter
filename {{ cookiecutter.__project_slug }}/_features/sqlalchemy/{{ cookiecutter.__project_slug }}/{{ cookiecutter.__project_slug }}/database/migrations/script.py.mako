@@ -1,3 +1,4 @@
+# noqa: INP001 it's a migration module, no need for a package
 """Message: "${message}".
 
 - Revision ID: ${up_revision}
@@ -19,6 +20,7 @@ depends_on = ${repr(depends_on)}
 
 
 def upgrade() -> None:
+    """Upgrade database to the next revision."""
     % if upgrades:
         ${upgrades}
     % else:
@@ -29,6 +31,7 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
+    """Downgrade database to the previous revision."""
     % if downgrades:
         ${downgrades}
     % else:

@@ -1,12 +1,16 @@
+"""Application settings."""
 from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    {%- if cookiecutter.orm == 'SQLAlchemy' %}
+    """Production application settings from environment."""
+{% if cookiecutter.orm == 'SQLAlchemy' %}
     database_url: str
-    {%- endif %}
+{%- endif %}
 
     class Config:
+        """Pydantic settings configuration."""
+
         env_file = ".env"
         env_prefix = "{{ cookiecutter.__project_slug | upper }}_"
 

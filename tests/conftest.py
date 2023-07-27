@@ -2,7 +2,6 @@ import shlex
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Optional
 
 import pytest
 from cookiecutter.main import cookiecutter
@@ -31,15 +30,13 @@ def render_project_dir(request):
                     accept_hooks=use_hooks,
                     output_dir=current_dir,
                     extra_context=context or {},
-                )
+                ),
             )
         )
     finally:
         shutil.rmtree(result_dir)
 
 
-def run_command(cmd: str, env: Optional[dict] = None) -> None:
-    """
-    Run a shell command.
-    """
+def run_command(cmd: str, env: dict | None = None) -> None:
+    """Run a shell command."""
     subprocess.run(shlex.split(cmd), env=env, check=True)
