@@ -1,5 +1,7 @@
+"""Base sqlalchemy entities."""
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase
+
 from {{cookiecutter.__project_slug}}.settings import settings
 
 db_engine = create_engine(
@@ -8,4 +10,4 @@ db_engine = create_engine(
 
 
 class BaseModel(DeclarativeBase):
-    pass
+    """Base sqlalchemy model."""

@@ -1,5 +1,6 @@
+"""Entity schemas for the API."""
 from pydantic import BaseModel as BaseSchema
 
 
 class SomeSchema(BaseSchema):
-    pass
+    """Schema for /something endpoint."""
